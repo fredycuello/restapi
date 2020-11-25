@@ -16,7 +16,7 @@ app.use(express.json());
 
 const client = new Client({
     user: 'messagelog',
-    host: '66.70.179.213',
+    host: 'localhost',
     database: 'messagelog',
     password: 'JZZQHJwrL1fT4yFCgeGYf4zX8tWKbECk',
     port: 5432,
