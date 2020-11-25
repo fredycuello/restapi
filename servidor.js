@@ -27,19 +27,12 @@ client.connect();
 app.get('/', function( req, result) {
 
     const query = `
-    SELECT timezone('art'::text, to_timestamp((logrecord."time" / 1000)::double precision)) AS fecha,
-    xpath('/SOAP-ENV:Envelope/SOAP-ENV:Body//request/*'::text, logrecord.message::xml, '{{s,http://schemas.xmlsoap.org/soap/envelope/},{h,http://x-road.eu/xsd/xroad.xsd},{tns,http://thinknet.x-road.eu/producer/},{SOAP-ENV,http://schemas.xmlsoap.org/soap/envelope/}}'::text[])::text AS request,
-    (xpath('/SOAP-ENV:Envelope/s:Header/h:service/a:memberClass/text()'::text, logrecord.message::xml, '{{s,http://schemas.xmlsoap.org/soap/envelope/},{h,http://x-road.eu/xsd/xroad.xsd},{a,http://x-road.eu/xsd/identifiers},{SOAP-ENV,http://schemas.xmlsoap.org/soap/envelope/}}'::text[]))[1] AS service_memberclass,
-    (xpath('/SOAP-ENV:Envelope/s:Header/h:service/a:memberCode/text()'::text, logrecord.message::xml, '{{s,http://schemas.xmlsoap.org/soap/envelope/},{h,http://x-road.eu/xsd/xroad.xsd},{a,http://x-road.eu/xsd/identifiers},{SOAP-ENV,http://schemas.xmlsoap.org/soap/envelope/}}'::text[]))[1] AS service_membercode,
-    (xpath('/SOAP-ENV:Envelope/s:Header/h:service/a:subsystemCode/text()'::text, logrecord.message::xml, '{{s,http://schemas.xmlsoap.org/soap/envelope/},{h,http://x-road.eu/xsd/xroad.xsd},{a,http://x-road.eu/xsd/identifiers},{SOAP-ENV,http://schemas.xmlsoap.org/soap/envelope/}}'::text[]))[1] AS service_subsystemcode,
-    logrecord.memberclass AS client_memberclass,
-    logrecord.membercode AS client_membercode,
-    logrecord.subsystemcode AS client_subsystemcode,
-    (xpath('/SOAP-ENV:Envelope/s:Header/h:userId/text()'::text, logrecord.message::xml, '{{s,http://schemas.xmlsoap.org/soap/envelope/},{h,http://x-road.eu/xsd/xroad.xsd},{a,http://x-road.eu/xsd/identifiers},{SOAP-ENV,http://schemas.xmlsoap.org/soap/envelope/}}'::text[]))[1] AS userid,
-    logrecord.response
-   FROM logrecord
-  WHERE logrecord.discriminator::text = 'm'::text 
-  order by id desc limit 10
+    select requests.id, responses.id as respid, requests.message, responses.message as respmessage, requests.* from 
+    logrecord requests left join logrecord responses on requests.timestamprecord = responses.timestamprecord
+    where requests.response = false and responses.response = true
+    
+    order by id desc
+    limit 10
         `;
 
     client.query(query, (err, res) => {
