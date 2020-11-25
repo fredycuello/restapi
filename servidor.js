@@ -14,15 +14,6 @@ app.use(express.json());
 
 
 
-const client = new Client({
-    user: 'messagelog',
-    host: 'localhost',
-    database: 'messagelog',
-    password: 'JZZQHJwrL1fT4yFCgeGYf4zX8tWKbECk',
-    port: 5432,
-});
-
-client.connect();
 
 app.get('/', function( req, result) {
 
@@ -35,7 +26,16 @@ app.get('/', function( req, result) {
     limit 10
         `;
 
+    const client = new Client({
+            user: 'messagelog',
+            host: 'localhost',
+            database: 'messagelog',
+            password: 'JZZQHJwrL1fT4yFCgeGYf4zX8tWKbECk',
+            port: 5432,
+        });
+        
     client.connect();
+        
 
     client.query(query, (err, res) => {
         if (err) {
