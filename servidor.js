@@ -35,6 +35,8 @@ app.get('/', function( req, result) {
     limit 10
         `;
 
+    client.connect();
+
     client.query(query, (err, res) => {
         if (err) {
             console.error(err);
