@@ -1,6 +1,9 @@
 const express = require('express');
 const morgan = require('morgan');
 const { Client } = require('pg');
+var propertiesReader = require('properties-reader');
+
+
 
 const app=express();
 
@@ -11,8 +14,9 @@ app.use(express.urlencoded({extended:false}));
 app.use(express.json());
 
 
-
-
+var properties = propertiesReader('/etc/xroad/db.properties');
+var username = properties.get('messagelog.hibernate.connection.username');
+var password = properties.get('messagelog.hibernate.connection.password');
 
 
 app.get('/', function( req, result) {
@@ -27,10 +31,10 @@ app.get('/', function( req, result) {
         `;
 
     const client = new Client({
-            user: 'messagelog',
+            user: username,
             host: 'localhost',
             database: 'messagelog',
-            password: 'JZZQHJwrL1fT4yFCgeGYf4zX8tWKbECk',
+            password: password,
             port: 5432,
         });
         
