@@ -62,7 +62,7 @@ app.get('/', function( req, result) {
         client.end();
     });
 
-    //res.send( {"hola":"algo"} );
+    
 });
 
 app.listen(app.get('port'), function (){
