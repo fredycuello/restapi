@@ -1,12 +1,18 @@
 const express = require('express');
 const morgan = require('morgan');
+const url = require('url');
+const PropertiesReader = require('properties-reader');
+
+const prop = PropertiesReader('operational.properties');
+
 
 const app=express();
+
 
 // Configuration
 const PORT = 3000;
 const HOST = "localhost";
-const API_SERVICE_URL = "http://xroad.neuquen.gov.ar";
+
 
 app.set('port', PORT);
 
@@ -19,21 +25,21 @@ app.use(morgan('dev'));
 // Info GET endpoint
 app.get('/operational', (req, res, next) => {
 
-    const data = `<?xml version="1.0" encoding="utf-8"?><SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" 
+    var data = `<?xml version="1.0" encoding="utf-8"?><SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" 
     xmlns:xroad="http://x-road.eu/xsd/xroad.xsd" 
     xmlns:om="http://x-road.eu/xsd/op-monitoring.xsd" 
     xmlns:id="http://x-road.eu/xsd/identifiers"> 
   <SOAP-ENV:Header> 
     <xroad:client id:objectType="SUBSYSTEM">
       <id:xRoadInstance>roksnet</id:xRoadInstance> 
-      <id:memberClass>GOV</id:memberClass> 
-      <id:memberCode>71111229</id:memberCode> 
-      <id:subsystemCode>GP-OPTIC</id:subsystemCode> 
+      <id:memberClass>COM</id:memberClass> 
+      <id:memberCode>41125212</id:memberCode> 
+      <id:subsystemCode>integrabilidad</id:subsystemCode> 
     </xroad:client> 
     <xroad:service id:objectType="SERVICE">
  <id:xRoadInstance>roksnet</id:xRoadInstance> 
-      <id:memberClass>GOV</id:memberClass> 
-      <id:memberCode>71111229</id:memberCode> 
+      <id:memberClass>COM</id:memberClass> 
+      <id:memberCode>41125212</id:memberCode> 
       <id:serviceCode>getSecurityServerOperationalData</id:serviceCode> 
     </xroad:service> 
 
@@ -44,7 +50,7 @@ app.get('/operational', (req, res, next) => {
   <SOAP-ENV:Body> 
     <om:getSecurityServerOperationalData> 
       <om:searchCriteria> 
-        <om:recordsFrom>1603326249</om:recordsFrom> 
+        <om:recordsFrom>1600000000</om:recordsFrom> 
         <om:recordsTo>1700000000</om:recordsTo> 
       </om:searchCriteria> 
     </om:getSecurityServerOperationalData> 
@@ -53,9 +59,23 @@ app.get('/operational', (req, res, next) => {
 
 const http = require('http');
 
-//The url we want is `www.nodejitsu.com:1337/`
+let recordsFrom = req.query.recordsFrom;
+let recordsTo = req.query.recordsTo;
+
+data = data.replace('1600000000', recordsFrom);
+data = data.replace('1700000000', recordsTo);
+//console.log(data);
+
+console.log( req.query);
+//console.log( recordsFrom, recordsTo);
+
+//var puertostr = prop.get('opciones.puerto');
+var host = prop.get('opciones.host');
+
+console.log( host );
+
 var options = {
-  host: '127.0.0.1',
+  host: host,
   path: '/',
   //since we are listening on a custom port, we need to specify it by hand
   port: '80',
@@ -66,14 +86,18 @@ var options = {
 };
 
 callback = function(response) {
-  var str = ''
+  var data = [ ];
+
   response.on('data', function (chunk) {
-    str += chunk;
+    data.push(chunk);
+    //console.log("chunk:" + data.contentType);
   });
 
   response.on('end', function () {
-    console.log(str);
-    res.send(str);
+    var binary = Buffer.concat(data);
+    res.send(binary);
+    res.contentType = response.contentType;
+
   });
 }
 
@@ -82,9 +106,6 @@ req1.setHeader("Content-Type","text/xml");
 //This is the data we are posting, it needs to be a string or a buffer
 req1.write(data);
 req1.end();
-
-
-
 
     });
 

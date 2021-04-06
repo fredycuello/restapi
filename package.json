@@ -10,7 +10,7 @@
     "https": "^1.0.0",
     "morgan": "^1.10.0",
     "pg": "^8.5.1",
-    "properties-reader": "^2.1.1"
+    "properties-reader": "^2.2.0"
   },
   "devDependencies": {},
   "scripts": {
