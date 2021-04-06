@@ -69,10 +69,14 @@ let subsystemCode = req.query.subsystemCode;
 data = data.replace('1600000000', recordsFrom);
 data = data.replace('1700000000', recordsTo);
 
-data = data.replaceall('XROAD-INSTANCE', xRoadInstance);
-data = data.replaceall('MEMBER-CLASS', memberClass);
-data = data.replaceall('MEMBER-CODE', memberCode);
+data = data.replace('XROAD-INSTANCE', xRoadInstance);
+data = data.replace('MEMBER-CLASS', memberClass);
+data = data.replace('MEMBER-CODE', memberCode);
 data = data.replace('SUBSYSTEM-CODE', subsystemCode);
+
+data = data.replace('XROAD-INSTANCE', xRoadInstance);
+data = data.replace('MEMBER-CLASS', memberClass);
+data = data.replace('MEMBER-CODE', memberCode);
 
 
 
