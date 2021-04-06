@@ -31,15 +31,15 @@ app.get('/operational', (req, res, next) => {
     xmlns:id="http://x-road.eu/xsd/identifiers"> 
   <SOAP-ENV:Header> 
     <xroad:client id:objectType="SUBSYSTEM">
-      <id:xRoadInstance>roksnet</id:xRoadInstance> 
-      <id:memberClass>COM</id:memberClass> 
-      <id:memberCode>41125212</id:memberCode> 
-      <id:subsystemCode>integrabilidad</id:subsystemCode> 
+      <id:xRoadInstance>XROAD-INSTANCE</id:xRoadInstance> 
+      <id:memberClass>MEMBER-CLASS</id:memberClass> 
+      <id:memberCode>MEMBER-CODE</id:memberCode> 
+      <id:subsystemCode>SUBSYSTEM-CODE</id:subsystemCode> 
     </xroad:client> 
     <xroad:service id:objectType="SERVICE">
- <id:xRoadInstance>roksnet</id:xRoadInstance> 
-      <id:memberClass>COM</id:memberClass> 
-      <id:memberCode>41125212</id:memberCode> 
+ <id:xRoadInstance>XROAD-INSTANCE</id:xRoadInstance> 
+      <id:memberClass>MEMBER-CLASS</id:memberClass> 
+      <id:memberCode>MEMBER-CODE</id:memberCode> 
       <id:serviceCode>getSecurityServerOperationalData</id:serviceCode> 
     </xroad:service> 
 
@@ -61,9 +61,19 @@ const http = require('http');
 
 let recordsFrom = req.query.recordsFrom;
 let recordsTo = req.query.recordsTo;
+let xRoadInstance = req.query.xRoadInstance;
+let memberClass = req.query.memberClass;
+let memberCode = req.query.memberCode;
+let subsystemCode = req.query.subsystemCode;
 
 data = data.replace('1600000000', recordsFrom);
 data = data.replace('1700000000', recordsTo);
+
+data = data.replace('XROAD-INSTANCE', xRoadInstance);
+data = data.replace('MEMBER-CLASS', memberClass);
+data = data.replace('MEMBER-CODE', memberCode);
+data = data.replace('SUBSYSTEM-CODE', subsystemCode);
+
 //console.log(data);
 
 console.log( req.query);
