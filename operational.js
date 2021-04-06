@@ -74,7 +74,7 @@ data = data.replace('MEMBER-CLASS', memberClass);
 data = data.replace('MEMBER-CODE', memberCode);
 data = data.replace('SUBSYSTEM-CODE', subsystemCode);
 
-//console.log(data);
+console.log(data);
 
 console.log( req.query);
 //console.log( recordsFrom, recordsTo);
